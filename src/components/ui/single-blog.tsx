@@ -13,7 +13,7 @@ const SingleBlog = ({ name }: any) => {
             />
           </div>
           <div>
-            <h1 className="font-bold">Blogium</h1>
+            <h1 className="font-bold capitalize">{name}</h1>
           </div>
         </div>
         <div className="flex">
