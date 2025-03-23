@@ -9,6 +9,9 @@ import {
 } from "@headlessui/react";
 import { ModeToggle } from "./mode-toggle";
 import { Input } from "./input";
+import { axiosPost } from "../../handleApi/index.ts";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -21,7 +24,21 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
+
 export default function Navbar() {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    localStorage.removeItem("user");
+    const logOut: any = await axiosPost("/api/v1/users/logout");
+    if (logOut.success) {
+      toast.success("logged out successfully", {
+        closeButton: true,
+        position: "top-right",
+      });
+      localStorage.setItem("auth", "");
+      navigate("/login");
+    }
+  };
   return (
     <Disclosure as="nav" className="border-b mb-4 sticky top-0 bg-background">
       <div className="mx-auto max-w-7xl">
@@ -64,33 +81,12 @@ export default function Navbar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <a href="/">
-                <span className="tracking-wider text-2xl">
-                  Blogium
-                </span>
+                <span className="tracking-wider text-2xl">Blogium</span>
               </a>
             </div>
             <div className="w-1/5 ml-4 hidden md:block">
               <Input type="text" placeholder="Search" />
             </div>
-            {/* <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    aria-current={item.current ? "page" : undefined}
-                    className={classNames(
-                      item.current
-                        ? " text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
-                      "rounded-md px-3 py-2 text-sm font-medium"
-                    )}
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-            </div> */}
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {/* Dark and Light mode toggle   */}
@@ -111,7 +107,7 @@ export default function Navbar() {
               </div>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 px-1 mt-2 w-36 origin-top-right rounded-md bg-background py-1 ring-1 shadow-lg ring-foreground/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                className="absolute right-0 z-10 px-1 mt-2 w-36 origin-top-right rounded-md bg-foreground text-background py-1 ring-1 shadow-lg ring-foreground/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
               >
                 <MenuItem>
                   <a
@@ -119,6 +115,14 @@ export default function Navbar() {
                     className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden"
                   >
                     Profile
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a
+                    onClick={handleLogout}
+                    className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden cursor-pointer"
+                  >
+                    Logout
                   </a>
                 </MenuItem>
               </MenuItems>

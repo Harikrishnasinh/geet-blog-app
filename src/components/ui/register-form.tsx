@@ -4,14 +4,60 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/store/userSlice";
+import axios from 'axios'
+import { toast } from "sonner";
+import { Toaster } from "./sonner";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.auth.user);
+  const navigate = useNavigate()
+
+  const handleRegister = async (e: any) => {
+   try {
+     e.preventDefault();
+     console.log(user)
+     // Perform registration logic here
+     const apiUrl = import.meta.env.VITE_DB_URL;
+     const registeredUser = await axios.post(`${apiUrl}/api/v1/users/register`, user)
+     if(registeredUser.data.success){
+       toast.success("Registered Successfully!!!!", {
+         cancel: {
+           label: "Cancel",
+           onClick: () => console.log("Cancel"),
+         },
+         position: "top-right",
+       })
+       dispatch(login(user));
+       navigate('/login')
+       return;
+     }
+   } catch (error) {
+     toast.error("Sorry, Registration Failed!!!", {
+       closeButton: true,
+       position: "top-right",
+     });
+    }
+  };
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    let { name, value } = e.target;
+    if(name === 'username') {
+      value = value.replace(/\s/g, ""); // Remove spaces
+      value = value.toLowerCase(); // Convert to lowercase
+    }
+    dispatch(login({ ...user, [name]: value }));
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Toaster></Toaster>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="bg-muted relative hidden md:block">
@@ -26,9 +72,7 @@ export function RegisterForm({
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Blogium</h1>
                 <Separator className="my-4" />
-                <p className="text-muted-foreground text-balance">
-                  Register
-                </p>
+                <p className="text-muted-foreground text-balance">Register</p>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="firstName">First name</Label>
@@ -37,6 +81,9 @@ export function RegisterForm({
                   type="text"
                   placeholder="jack"
                   required
+                  name="firstName"
+                  value={user.firstName}
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
               <div className="grid gap-3">
@@ -46,6 +93,9 @@ export function RegisterForm({
                   type="text"
                   placeholder="Daniels"
                   required
+                  name="lastName"
+                  value={user.lastName}
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
               <div className="grid gap-3">
@@ -55,6 +105,9 @@ export function RegisterForm({
                   type="text"
                   placeholder="jackdaniels"
                   required
+                  name="userName"
+                  value={user.username}
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
               <div className="grid gap-3">
@@ -64,6 +117,9 @@ export function RegisterForm({
                   type="email"
                   placeholder="jackdaniels@gmail.com"
                   required
+                  name="email"
+                  value={user.email}
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
               <div className="grid gap-3">
@@ -76,10 +132,18 @@ export function RegisterForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  name="password"
+                  placeholder="********"
+                  value={user.password}
+                  onChange={(e) => handleChange(e)}
+                />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" onClick={handleRegister}>
+                Register
               </Button>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
@@ -91,10 +155,6 @@ export function RegisterForm({
           </form>
         </CardContent>
       </Card>
-      {/* <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div> */}
     </div>
   );
 }
