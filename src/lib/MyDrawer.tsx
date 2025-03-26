@@ -3,7 +3,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -13,9 +12,7 @@ import AddBlogPost from "./addBlogPostForm";
 
 const MyDrawer = ({
   drawerTrigger,
-  drawerDescription,
   drawerTitle,
-  drawerClose,
 }: any) => {
   return (
     <Drawer>
