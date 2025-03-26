@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { login, logout, register } from "../controllers/user.contoller.js";
 const router = Router();
@@ -8,7 +7,7 @@ router
     "/register",register
   )
   .post("/login", login)
-  .post("/logout", verifyJWT, logout)
+  .post("/logout", logout)
 //   .post("/refresh-token", refershAccessToken)
 //   .post("/update-password", verifyJWT, changeCurrentPassword)
 //   .post("/current-user", verifyJWT, currentUser)

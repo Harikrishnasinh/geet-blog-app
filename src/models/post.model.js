@@ -4,7 +4,11 @@ dotenv.config({
   path: "./.env",
 });
 
-const blogSchema = new Schema({
+const postSchema = new Schema({
+    userMetaData: {
+        type: Object,
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -13,16 +17,10 @@ const blogSchema = new Schema({
         type: String,
         required: true
     },
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    coverImage: {
-        type: String
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    image: {
+        type: String,
+        required: false
     }
 })
+
+export const Post = mongoose.model("Post", postSchema);
