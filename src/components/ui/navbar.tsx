@@ -12,6 +12,8 @@ import { Input } from "./input";
 import { axiosPost } from "../../handleApi/index.ts";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import MyDrawer from "@/lib/MyDrawer.tsx";
+import AddBlogPost from "@/lib/addBlogPostForm.tsx";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -90,6 +92,8 @@ export default function Navbar() {
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {/* Dark and Light mode toggle   */}
+
+            <MyDrawer drawerTrigger="Add Post" drawerTitle="Post" drawerDescription={<AddBlogPost/ >} drawerClose="Close" />
             <ModeToggle />
 
             {/* Profile dropdown */}
