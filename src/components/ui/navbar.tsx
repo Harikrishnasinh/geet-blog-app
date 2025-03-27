@@ -92,13 +92,13 @@ export default function Navbar() {
               <Input type="text" placeholder="Search" />
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div className="inset-y-0 right-0 flex gap-2 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
             <MyDrawer
               drawerTrigger="Add Post"
-              drawerTitle="Post"
+              drawerTitle="Add Post"
               drawerDescription={(onClose) => <AddBlogPost onClose={onClose} />} // Pass onClose
-              drawerClose="Close"
+              drawerTriggerClassName="bg-foreground text-background"
               />
             
             {/* Dark and Light mode toggle   */}
