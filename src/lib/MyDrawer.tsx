@@ -1,33 +1,44 @@
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
   Drawer,
-  DrawerClose,
+  DrawerTrigger,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerDescription,
+  DrawerClose,
 } from "@/components/ui/drawer";
-import AddBlogPost from "./addBlogPostForm";
 
-const MyDrawer = ({
+interface MyDrawerProps {
+  drawerTrigger: string;
+  drawerTitle: string;
+  drawerDescription: (onClose: () => void) => React.ReactNode; // Make it a function
+  drawerClose: string;
+}
+
+const MyDrawer: React.FC<MyDrawerProps> = ({
   drawerTrigger,
   drawerTitle,
-}: any) => {
+  drawerDescription,
+  drawerClose,
+}) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Drawer>
-      <DrawerTrigger>{drawerTrigger}</DrawerTrigger>
-      <DrawerContent className="min-h-[90vh]">
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <button className="outline-none" onClick={() => setOpen(true)}>{drawerTrigger}</button>
+      </DrawerTrigger>
+      <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{drawerTitle}</DrawerTitle>
-          {/* <DrawerDescription>{drawerDescription}</DrawerDescription> */}
+          <DrawerDescription>
+            {drawerDescription(() => setOpen(false))} {/* Pass setOpen */}
+          </DrawerDescription>
         </DrawerHeader>
-        <AddBlogPost />
-        <DrawerFooter>
-          <DrawerClose>
-            <Button variant="outline">close</Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <DrawerClose asChild>
+          <button onClick={() => setOpen(false)}>{drawerClose}</button>
+        </DrawerClose>
       </DrawerContent>
     </Drawer>
   );

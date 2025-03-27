@@ -12,17 +12,6 @@ const initialState = {
     },
 }
 
-const clearUser = () =>{
-    initialState.user  = {
-        firstName: '',
-        lastName: '',
-        userName: '',
-        email: '',
-        password: '',
-        likedPosts: [],
-    }
-}
-
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -33,7 +22,14 @@ const authSlice = createSlice({
         },
         logout(state) {
             state.isAuthenticated = false;
-            clearUser();
+            state.user = { // Reset user directly
+                firstName: '',
+                lastName: '',
+                userName: '',
+                email: '',
+                password: '',
+                likedPosts: [],
+            };
         },
     },
 })

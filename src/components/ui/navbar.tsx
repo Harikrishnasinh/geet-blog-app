@@ -14,6 +14,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import MyDrawer from "@/lib/MyDrawer.tsx";
 import AddBlogPost from "@/lib/addBlogPostForm.tsx";
+import { Toaster } from "./sonner.tsx";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -43,6 +44,7 @@ export default function Navbar() {
   };
   return (
     <Disclosure as="nav" className="border-b mb-4 sticky top-0 bg-background">
+      <Toaster />
       <div className="mx-auto max-w-7xl">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -91,9 +93,15 @@ export default function Navbar() {
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {/* Dark and Light mode toggle   */}
 
-            <MyDrawer drawerTrigger="Add Post" drawerTitle="Post" drawerDescription={<AddBlogPost/ >} drawerClose="Close" />
+            <MyDrawer
+              drawerTrigger="Add Post"
+              drawerTitle="Post"
+              drawerDescription={(onClose) => <AddBlogPost onClose={onClose} />} // Pass onClose
+              drawerClose="Close"
+              />
+            
+            {/* Dark and Light mode toggle   */}
             <ModeToggle />
 
             {/* Profile dropdown */}

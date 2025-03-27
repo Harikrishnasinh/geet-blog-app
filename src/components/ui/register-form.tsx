@@ -28,10 +28,7 @@ export function RegisterForm({
      const registeredUser = await axios.post(`${apiUrl}/api/v1/users/register`, user)
      if(registeredUser.data.success){
        toast.success("Registered Successfully!!!!", {
-         cancel: {
-           label: "Cancel",
-           onClick: () => console.log("Cancel"),
-         },
+         closeButton: true,
          position: "top-right",
        })
        dispatch(login(user));

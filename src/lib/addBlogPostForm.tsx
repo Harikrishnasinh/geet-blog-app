@@ -8,7 +8,7 @@ import { axiosPost } from "@/handleApi";
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET // Replace with your Cloudinary upload preset
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME // Replace with your Cloudinary cloud name
 
-const AddBlogPost = () => {
+const AddBlogPost: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -63,11 +63,14 @@ const userData = userDataString ? JSON.parse(userDataString) : null; // Safely p
         console.log(56, blogPostData);
       const response = await axiosPost('/api/v1/post',blogPostData)
 
-      console.log(60, response)
-      return;
-
-      if (response.ok) {
-        toast.success("Blog post added successfully!");
+      if (response.success) {
+        toast.success("Post Added Successfully!", {
+          closeButton: true,
+          position: "top-right",
+        })
+        setTimeout(() => {
+          onClose();
+        })
         setTitle("");
         setContent("");
         setImage(null);
