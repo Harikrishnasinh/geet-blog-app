@@ -4,13 +4,20 @@ import LoginPage from "./components/pages/login-page";
 import { BrowserRouter, Routes, Route } from "react-router";
 import RegisterPage from "./components/pages/register-page";
 import Home from "./components/pages/home-page";
+import SingleBlogPost from "./components/pages/single-blog-page";
+import MainLayout from "./components/pages/main-layout";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Home />} />
+            <Route path="/post/:id" element={<SingleBlogPost />} />
+            <Route path="/profile" element={<h1>Profile Page</h1>} />
+          </Route>
+
           <Route path="/mode-toggle" element={<ModeToggle />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

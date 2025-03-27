@@ -1,8 +1,33 @@
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SingleBlog from "./single-blog";
+import { useEffect, useState } from "react";
+import { axiosGet } from "@/handleApi";
+import { toast } from "sonner";
 
 const BlogList = () => {
+
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    // Fetch blog data here
+    fetchBlogs()
+  })
+
+  const fetchBlogs = async () =>{
+    try {
+      const res = await axiosGet('/api/v1/post')
+      if(res.success){
+        setBlogs(res.posts);
+      }
+    } catch (error) {
+      toast.error('Something went wrong', {
+        closeButton: true,
+        position: "top-right"
+      })
+    }
+  } 
+
   return (
     <div className="w-100 border-r-2 md:w-3/4">
     <div className="px-2 py-1 pb-2 block md:hidden">
@@ -18,34 +43,11 @@ const BlogList = () => {
         </TabsList>
         <TabsContent value="all">
           <div className="overflow-y-auto removeScroll p-1">
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
-            <SingleBlog name="all" />
+           {
+            blogs.map((blog: any) => {
+              return <SingleBlog key={blog._id} data={blog} />
+            })
+           }
           </div>
         </TabsContent>
         <TabsContent value="javascript">

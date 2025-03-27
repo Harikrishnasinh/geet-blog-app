@@ -1,6 +1,7 @@
+import { addElipsis } from "@/lib/utils";
 import { Button } from "./button";
 
-const SingleBlog = ({ name }: any) => {
+const SingleBlog = ({ data }: any) => {
   return (
     <>
       <div className="flex flex-col gap-4 align-items-center my-4 p-2">
@@ -12,19 +13,15 @@ const SingleBlog = ({ name }: any) => {
               className="size-8 rounded-full ring-2 shadow-sm"
             />
           </div>
-          <div>
-            <h1 className="font-bold capitalize">{name}</h1>
-          </div>
+            <h1 className="font-bold capitalize m-0 p-0">{data.userMetaData.userName}</h1>
         </div>
         <div className="flex">
           <div className="flex flex-col align-start justify-between">
             <h2 className="text-left text-2xl font-extrabold break-words">
-              Claude with MCPs Replaced Cursor & Windsurf — How Did That Happen?
+              { addElipsis(data.title, 70 )}
             </h2>
             <p className="text-left text-sm text-muted-background">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Vestibulum at dui vel arcu cursus euismod. Sed in dolor vel justo
-              tincidunt suscipit. Integer vel velit vel neque tincidunt tempor.
+              { addElipsis(data.content, 100)}
             </p>
             <div className="flex flex-wrap justify-between mt-4 sm:m-0">
               <div className="flex flex-wrap align-cennter gap-8">
@@ -116,9 +113,9 @@ const SingleBlog = ({ name }: any) => {
           </div>
           <div className="hidden w-100 md:flex justify-center items-center">
             <img
-              src="https://images.unsplash.com/photo-1736049621371-4507004ac8b1?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src={data.image}
               alt="profile"
-              className="h-40 w-40 shadow-xl"
+              className="h-40 w-40 shadow-xl object-cover"
             />
           </div>
         </div>
