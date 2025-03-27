@@ -7,7 +7,7 @@ router
     "/register",register
   )
   .post("/login", login)
-  .post("/logout", logout)
+  .post("/logout", verifyJWT, logout)
 //   .post("/refresh-token", refershAccessToken)
 //   .post("/update-password", verifyJWT, changeCurrentPassword)
 //   .post("/current-user", verifyJWT, currentUser)

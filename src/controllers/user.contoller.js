@@ -79,7 +79,7 @@ const login = asyncHandler(async (req, res, next) => {
 
 const logout = asyncHandler(async (req, res, next) => {
     try {
-        req.user.refreshtoken = null;
+        req.user.refreshToken = null;
         await req.user.save({ validateBeforeSave: false });
         res.json({ success: true, message: "User logged out successfully" });
     } catch (error) {
