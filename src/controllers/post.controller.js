@@ -24,3 +24,17 @@ export const createPost = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getAllPosts = async (req, res, next) => {
+    try {
+        const posts = await Post.find({}).sort({createdAt: -1});
+        res.status(200).json({
+            success: true,
+            message: "Posts retrieved successfully!!!!",
+            posts,
+        });
+    } catch (error){
+        console.log(error)
+        next(error);
+    }
+}
