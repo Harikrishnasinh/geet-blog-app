@@ -53,14 +53,14 @@ const BlogSideBar = () => {
   };
 
   return (
-    <div className="w-100 px-4 relative">
-      <div className="flex flex-col gap-4 sticky top-[5rem]">
+    <div className="px-4 relative">
+      <div className="md:w-11/12 flex flex-col gap-4 sticky top-[5rem]">
         <h1 className="text-left font-bold">Suggested For you</h1>
 
         {blogs?.map((blog: any, index: any) => {
           return (
-            <div key={index} className="flex my-2 flex-col gap-4">
-              <div className="flex align-items-center gap-4">
+            <div key={index} className="flex my-2 flex-col items-start gap-4">
+              <div className="flex items-center gap-4">
                 <div>
                   <img
                     src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -80,9 +80,11 @@ const BlogSideBar = () => {
                   {addElipsis(blog.content, 38)}
                 </p>
               </div>
-              <Button type="button" variant="secondary" size={"sm"}>
-                <Link to={`/post/${blog._id}`}>Read More</Link>
-              </Button>
+              <Link to={`/post/${blog._id}`}>
+                <Button type="button" variant="secondary" size={"sm"}>
+                  Read More
+                </Button>
+              </Link>
             </div>
           );
         })}
@@ -94,7 +96,10 @@ const BlogSideBar = () => {
           <div>
             {topUsers.map((topUser: any) => {
               return (
-                <div key={topUser._id} className="flex my-2 gap-4 items-center">
+                <div
+                  key={topUser._id}
+                  className="flex my-2 gap-4 flex-col items-start"
+                >
                   <div className="flex flex-col gap-2 align-start justify-between">
                     <h2 className="text-left text-md font-bold">
                       {addElipsis(topUser?.userName, 34)}
@@ -103,9 +108,18 @@ const BlogSideBar = () => {
                       {addElipsis(topUser?.email, 38)}
                     </p>
                   </div>
-                  <Button type="button" variant="secondary" size={"sm"}>
-                    <Link to={`/profile/${topUser.userId}`}>View Profile</Link>
-                  </Button>
+                  <div>
+                  <Link to={`/profile/${topUser.userId}`}>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-full"
+                      size={"sm"}
+                    >
+                      View Profile
+                    </Button>
+                  </Link>
+                  </div>
                 </div>
               );
             })}
