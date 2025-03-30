@@ -110,7 +110,7 @@ const BlogList = () => {
   }
 
   return (
-    <div className="w-100 border-r-2 md:w-3/4 md:pr-8">
+    <div className="w-100 md:border-r-2 md:w-3/4 md:pr-8">
       <div className="px-2 py-1 pb-2 block w-full">
         <Input type="text" placeholder="Search" value={search} onChange={(e) => handleSearch(e)} />
       </div>

@@ -115,8 +115,8 @@ const UserProfilePage = () => {
   }
 
   return (
-    <div className="flex items-start justify-between gap-4 ">
-      <div className="w-4/5">
+    <div className="flex flex-wrap items-start justify-between gap-4 ">
+      <div className="w-100 md:w-4/5">
         <div>
           <p className="font-light text-3xl text-left">
             {user.firstName} {user.lastName}
