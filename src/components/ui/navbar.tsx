@@ -8,18 +8,13 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { ModeToggle } from "./mode-toggle";
-import { Input } from "./input";
 import { axiosPost } from "../../handleApi/index.ts";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import MyDrawer from "@/lib/MyDrawer.tsx";
 import AddBlogPost from "@/lib/addBlogPostForm.tsx";
-import { Toaster } from "./sonner.tsx";
 import { Button } from "./button.tsx";
 import { Link } from "react-router";
-import { useTheme } from "./theme-provider.tsx";
-import { useEffect, useState } from "react";
-import { useDebounce } from "@/hooks/useDebounce.tsx";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
