@@ -4,7 +4,7 @@ import BlogSideBar from "../ui/blog-sidebar";
 const Home = () => {
   return (
     <>
-      <div className="flex flex-wrap md:flex-nowrap align-center justify-between">
+      <div className="flex flex-wrap md:flex-nowrap gap-0 md:gap-8 justify-between">
         <BlogList />
         <BlogSideBar />
       </div>

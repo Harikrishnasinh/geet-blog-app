@@ -10,6 +10,8 @@ import { login } from "@/store/userSlice";
 import axios from 'axios'
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
+import { useState } from "react";
+import { Spinner } from "./loader";
 
 export function RegisterForm({
   className,
@@ -18,9 +20,11 @@ export function RegisterForm({
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e: any) => {
    try {
+    setLoading(true);
      e.preventDefault();
      console.log(user)
      // Perform registration logic here
@@ -33,9 +37,11 @@ export function RegisterForm({
        })
        dispatch(login(user));
        navigate('/login')
+       setLoading(false);
        return;
      }
    } catch (error) {
+      setLoading(false)
      toast.error("Sorry, Registration Failed!!!", {
        closeButton: true,
        position: "top-right",
@@ -45,7 +51,7 @@ export function RegisterForm({
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
-    if(name === 'username') {
+    if(name === 'userName') {
       value = value.replace(/\s/g, ""); // Remove spaces
       value = value.toLowerCase(); // Convert to lowercase
     }
@@ -139,13 +145,22 @@ export function RegisterForm({
                   onChange={(e) => handleChange(e)}
                 />
               </div>
-              <Button type="submit" className="w-full" onClick={handleRegister}>
-                Register
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center gap-4"
+                onClick={handleRegister}
+              >
+                {!loading ? (
+                  "Register"
+                ) : (
+                  <Spinner size={"small"} className="text-background"></Spinner>
+                )}
               </Button>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <Link to="/login" className="underline underline-offset-4">
-                  Sign up
+                  Sign in
                 </Link>
               </div>
             </div>

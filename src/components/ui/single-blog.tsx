@@ -1,11 +1,80 @@
 import { addElipsis } from "@/lib/utils";
 import { Button } from "./button";
+import { Link } from "react-router";
+import { axiosPost } from "@/handleApi";
+import React from "react";
+import { toast } from "sonner";
 
 const SingleBlog = ({ data }: any) => {
+  const [like, setLike] = React.useState(0)
+  const [save, setSave] = React.useState(0)
+
+  
+  const userDataString = localStorage.getItem("user"); // Get item from localStorage
+  const userData = userDataString ? JSON.parse(userDataString) : null; // Safely parse JSON
+
+  const handleLike = async () => {
+    try {
+      const oPayload = {
+        iPostId: data._id,
+        iUserId: userData._id,
+      }    
+      const res = await axiosPost('/api/v1/post/like', oPayload)
+      if(res.success){
+        setLike(res.data.likesCount);
+        toast.success('Liked list updated!',{
+          closeButton: true,
+          position: "top-right"
+        })
+      }
+    } catch (error) {
+      toast.success('Something went wrong',{
+        closeButton: true,
+        position: "top-right"
+      })
+    }
+  }
+
+  const handleSave = async () => {
+    try {
+      const oPayload = {
+        iPostId: data._id,
+        iUserId: userData._id,
+      }    
+      const res = await axiosPost('/api/v1/post/save', oPayload)
+      if(res.success){
+        setSave(res.data.savedCount);
+        toast.success('Saved successfully',{
+          closeButton: true,
+          position: "top-right"
+        })
+      }
+    } catch (error) {
+      toast.success('Something went wrong',{
+        closeButton: true,
+        position: "top-right"
+      })
+    }
+  }
+
+  const handleShare = async () => {
+    import.meta.env.VITE_DB_URL
+    navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_URL}/${data._id}`)
+    toast.success('Link copied to clipboard',{
+      closeButton: true,
+      position: "top-right"
+    })
+  }
+
+  React.useEffect(() =>{
+    setLike(data.likes.length)
+    setSave(data.saved.length)
+  },[])
+
   return (
     <>
       <div className="flex flex-col gap-4 align-items-center my-4 p-2">
-        <div className="flex align-items-center gap-4">
+        <div className="flex items-center gap-4">
           <div>
             <img
               src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -13,19 +82,30 @@ const SingleBlog = ({ data }: any) => {
               className="size-8 rounded-full ring-2 shadow-sm"
             />
           </div>
-            <h1 className="font-bold capitalize m-0 p-0">{data.userMetaData.userName}</h1>
+          <h1 className="font-bold capitalize m-0 p-0">
+            <Link to={`/profile/${data.userMetaData._id}`}>
+              {data.userMetaData.userName}
+            </Link>
+          </h1>
         </div>
         <div className="flex">
-          <div className="flex flex-col align-start justify-between">
+          <div className="flex flex-col md:gap-4 align-start justify-between">
             <h2 className="text-left text-2xl font-extrabold break-words">
-              { addElipsis(data.title, 70 )}
+              {addElipsis(data.title, 70)}
             </h2>
             <p className="text-left text-sm text-muted-background">
-              { addElipsis(data.content, 100)}
+              {addElipsis(data.content, 100)}
             </p>
-            <div className="flex flex-wrap justify-between mt-4 sm:m-0">
+            {/* {
+            data?.categoryMetaData?.sName.length ? <div className="text-left my-4">
+                <Button variant={"secondary"} size={"sm"}>
+                  {data?.categoryMetaData?.sName}
+                </Button>
+              </div> : ''
+            } */}
+            <div className="flex md:items-center flex-wrap justify-between mt-4 sm:m-0">
               <div className="flex flex-wrap align-cennter gap-8">
-                <div className="like flex align-center gap-2">
+                <div className="like flex align-center gap-2" onClick={handleLike}>
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +122,11 @@ const SingleBlog = ({ data }: any) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">Like</span>
+                  <span className="text-muted-foreground hidden md:block">
+                   {like}  Like
+                  </span>
                 </div>
-                <div className="share flex align-center gap-2">
+                <div className="share flex align-center gap-2" onClick={handleShare}>
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -61,9 +143,11 @@ const SingleBlog = ({ data }: any) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">Share</span>
+                  <span className="text-muted-foreground hidden md:block">
+                    Share
+                  </span>
                 </div>
-                <div className="comment flex align-center gap-2">
+                {/* <div className="comment flex align-center gap-2">
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -80,9 +164,11 @@ const SingleBlog = ({ data }: any) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">Comment</span>
-                </div>
-                <div className="save flex align-center gap-2">
+                  <span className="text-muted-foreground hidden md:block">
+                    Comment
+                  </span>
+                </div> */}
+                <div className="save flex align-center gap-2" onClick={handleSave} >
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -100,20 +186,22 @@ const SingleBlog = ({ data }: any) => {
                     </svg>
                   </span>
                   <span className="text-muted-foreground hidden md:block">
-                    Save
+                    {save} Save
                   </span>
                 </div>
               </div>
               <div>
                 <Button type="button" variant="default">
-                  Read More
+                  <Link to={`/post/${data._id}`}>
+                    Read More
+                  </Link>
                 </Button>
               </div>
             </div>
           </div>
-          <div className="hidden w-100 md:flex justify-center items-center">
+          <div className="hidden w-100 md:flex justify-end items-center">
             <img
-              src={data.image}
+              src={data.image.length ? data.image : 'https://plus.unsplash.com/premium_photo-1676068243785-7b4d54e63c6d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTV8fHxlbnwwfHx8fHw%3D'}
               alt="profile"
               className="h-40 w-40 shadow-xl object-cover"
             />

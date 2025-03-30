@@ -6,6 +6,7 @@ import RegisterPage from "./components/pages/register-page";
 import Home from "./components/pages/home-page";
 import SingleBlogPost from "./components/pages/single-blog-page";
 import MainLayout from "./components/pages/main-layout";
+import UserProfilePage from "./components/pages/user-profile-page";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="/post/:id" element={<SingleBlogPost />} />
-            <Route path="/profile" element={<h1>Profile Page</h1>} />
+            <Route path="/profile/:iUserId" element={<UserProfilePage />} />
           </Route>
 
           <Route path="/mode-toggle" element={<ModeToggle />} />

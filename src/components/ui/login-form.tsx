@@ -11,6 +11,7 @@ import { Toaster } from "./sonner";
 import { toast } from "sonner";
 import { useState } from "react";
 import { axiosPost } from '../../handleApi/index.ts'
+import { Spinner } from "./loader.tsx";
 
 export function LoginForm({
   className,
@@ -20,15 +21,16 @@ export function LoginForm({
   const navigate = useNavigate();
   const [passwordVisibility, setPasswordVisibility] = useState("password");
   const user = useSelector((state: any) => state.auth.user);
+  const [loading, setLoading] = useState(false);
   const handleLogin = async (e: any) => {
     try {
       e.preventDefault();
+      setLoading(true);
       const oPayload = {
         email: user.email,
         password: user.password,
       };
       const logInUser: any = await axiosPost('/api/v1/users/login', oPayload)
-      console.log(logInUser);
       if (logInUser.success) {
         toast.success("Login Successfully!!!!", {
           closeButton: true, 
@@ -38,10 +40,11 @@ export function LoginForm({
         localStorage.setItem("auth", logInUser.refreshToken);
         localStorage.setItem('user', JSON.stringify(logInUser.user));
         navigate("/");
-        console.log('here')
+        setLoading(false);
         return;
       }
     } catch (error) {
+      setLoading(false);
       console.log(error)
       toast.error("Sorry, Login Failed!!!", {
         closeButton: true,
@@ -132,8 +135,11 @@ export function LoginForm({
                   placeholder="********"
                 />
               </div>
-              <Button type="submit" className="w-full" onClick={handleLogin}>
-                Login
+              <Button type="submit" className="w-full flex items-center gap-4" disabled={loading} onClick={handleLogin}> 
+                {
+                  !loading ? 'Login' : <Spinner size={"small"} className="text-background"></Spinner>
+                }
+                
               </Button>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}

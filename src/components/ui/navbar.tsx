@@ -15,6 +15,11 @@ import { toast } from "sonner";
 import MyDrawer from "@/lib/MyDrawer.tsx";
 import AddBlogPost from "@/lib/addBlogPostForm.tsx";
 import { Toaster } from "./sonner.tsx";
+import { Button } from "./button.tsx";
+import { Link } from "react-router";
+import { useTheme } from "./theme-provider.tsx";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce.tsx";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -27,9 +32,11 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-
 export default function Navbar() {
   const navigate = useNavigate();
+  const oUser: any = localStorage.getItem("user");
+  const userJsoned = JSON.parse(oUser);
+
   const handleLogout = async () => {
     localStorage.removeItem("user");
     const logOut: any = await axiosPost("/api/v1/users/logout");
@@ -43,8 +50,10 @@ export default function Navbar() {
     }
   };
   return (
-    <Disclosure as="nav" className="border-b mb-4 sticky top-0 bg-background">
-      <Toaster />
+    <Disclosure
+      as="nav"
+      className="border-b mb-4 sticky top-0 bg-background z-50"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -88,57 +97,60 @@ export default function Navbar() {
                 <span className="tracking-wider text-2xl">Blogium</span>
               </a>
             </div>
-            <div className="w-1/5 ml-4 hidden md:block">
-              <Input type="text" placeholder="Search" />
-            </div>
           </div>
           <div className="inset-y-0 right-0 flex gap-2 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
-            <MyDrawer
+          <MyDrawer
               drawerTrigger="Add Post"
               drawerTitle="Add Post"
               drawerDescription={(onClose) => <AddBlogPost onClose={onClose} />} // Pass onClose
-              drawerTriggerClassName="bg-foreground text-background"
-              />
-            
+              drawerTriggerButtonVariant='secondary'
+            />
+
             {/* Dark and Light mode toggle   */}
-            <ModeToggle />
+            {userJsoned?.hasOwnProperty("_id") ? <ModeToggle /> : ""}
 
             {/* Profile dropdown */}
-            <Menu as="div" className="relative ml-3">
-              <div>
-                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden cursor-pointer">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
-                </MenuButton>
-              </div>
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 px-1 mt-2 w-36 origin-top-right rounded-md bg-foreground text-background py-1 ring-1 shadow-lg ring-foreground/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-              >
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden"
-                  >
-                    Profile
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    onClick={handleLogout}
-                    className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden cursor-pointer"
-                  >
-                    Logout
-                  </a>
-                </MenuItem>
-              </MenuItems>
-            </Menu>
+            {userJsoned?.hasOwnProperty("_id") ? (
+              <Menu as="div" className="relative ml-3">
+                <div>
+                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden cursor-pointer">
+                    <span className="absolute -inset-1.5" />
+                    <span className="sr-only">Open user menu</span>
+                    <img
+                      alt=""
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      className="size-8 rounded-full"
+                    />
+                  </MenuButton>
+                </div>
+                <MenuItems
+                  transition
+                  className="absolute right-0 z-10 px-1 mt-2 w-36 origin-top-right rounded-md bg-foreground text-background py-1 ring-1 shadow-lg ring-foreground/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                >
+                  <MenuItem>
+                    <Link
+                      to={`/profile/${userJsoned._id}`}
+                      className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden"
+                    >
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <a
+                      onClick={handleLogout}
+                      className="w-full flex rounded-sm px-4 py-2 text-sm hover:bg-accent hover:text-accent-foreground data-focus:outline-hidden cursor-pointer"
+                    >
+                      Logout
+                    </a>
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
+            ) : (
+              <Link to={"/login"}>
+                <Button variant={"default"}>Login</Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
