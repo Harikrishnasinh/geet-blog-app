@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 dotenv.config({
   path: "./.env",
 });
-const verifyJWT = asyncHandler(async (req, _, next) => {
+const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
     const token =
       req.cookies?.accesstoken ||
@@ -21,12 +21,12 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
       "-password -refreshtoken"
     );
     if (!user) {
-      throw new apiError(400, "User is Not Authorized for this request");
+      return res.status(400).json(new apiError(400, "User is Not Authorized for this request"))
     }
     req.user = user;
     next();
   } catch (error) {
-    throw new apiError(401, error?.message || "invalid token error");
+    return res.status(401).json( new apiError(401, error?.message || "invalid token error"))
   }
 });
 export { verifyJWT };

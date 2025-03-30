@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { login, logout, register } from "../controllers/user.contoller.js";
+import { fetchUser, login, logout, register, updateUser } from "../controllers/user.contoller.js";
 const router = Router();
 router
   .post(
@@ -8,6 +8,8 @@ router
   )
   .post("/login", login)
   .post("/logout", verifyJWT, logout)
+  .get('/:iUserId', fetchUser)
+  .put('/:id', updateUser);
 //   .post("/refresh-token", refershAccessToken)
 //   .post("/update-password", verifyJWT, changeCurrentPassword)
 //   .post("/current-user", verifyJWT, currentUser)

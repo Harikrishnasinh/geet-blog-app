@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import { apiError } from "../utils/apiError.js";
+import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
@@ -19,10 +20,9 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
     return { refreshToken };
 };
 
-const register = asyncHandler( async (req, res, next) =>{
+const register = asyncHandler(async (req, res, next) => {
     try {
         const { firstName, lastName, userName, email, password } = req.body;
-        console.log(firstName, lastName, userName, email, password)
         if (!firstName || !lastName || !userName || !email || !password) {
             return next(new apiError(400, "Please fill all the fields"));
         }
@@ -51,7 +51,7 @@ const register = asyncHandler( async (req, res, next) =>{
 const login = asyncHandler(async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        if (!email ||!password) {
+        if (!email || !password) {
             return next(new apiError(400, "Please fill all the fields"));
         }
         const user = await User.findOne({ email }).select("+password");
@@ -59,10 +59,10 @@ const login = asyncHandler(async (req, res, next) => {
             return next(new apiError(401, "Invalid credentials"));
         }
         const { refreshToken } = await generateAccessTokenAndRefreshToken(user._id);
-         // Convert Mongoose document to plain object
-         const userObject = user.toObject(); // ✅ Converts Mongoose document to plain object
+        // Convert Mongoose document to plain object
+        const userObject = user.toObject(); // ✅ Converts Mongoose document to plain object
 
-         // Remove password from response
+        // Remove password from response
         delete userObject.password;
         delete userObject.createdAt;
         res.json({
@@ -88,5 +88,52 @@ const logout = asyncHandler(async (req, res, next) => {
     }
 })
 
+const fetchUser = asyncHandler(async (req, res, next) => {
+    try {
+        const { iUserId } = req.params
+        const user = await User.findById(iUserId).select("-password");
+        return res.status(200).json(
+            new apiResponse(
+                200,
+                'User fetched successfully',
+                user,
+            )
+        )
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(
+            new apiError(
+                500,
+                "Something went wrong while fetching user",
+                error,
+            )
+        )
+    }
+})
 
-export {register, login, logout}
+export const updateUser = asyncHandler(async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const { firstName, lastName, email } = req.body
+        const updatedUser = await User.findByIdAndUpdate(id, { firstName, lastName, email }, { new: true, runValidators: true })
+        return res.status(200).json(
+            new apiResponse(
+                200,
+                'User updated successfully',
+                updatedUser,
+            )
+        )
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(
+            new apiError(
+                500,
+                "Something went wrong while updating user",
+                error,
+            )
+        )
+    }
+})
+
+
+export { register, login, logout, fetchUser }

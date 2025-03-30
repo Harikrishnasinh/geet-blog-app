@@ -20,6 +20,24 @@ const postSchema = new Schema({
     image: {
         type: String,
         required: false
+    },
+    categoryMetaData: {
+        type: Object,
+    },
+    likes: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, ref: "User" 
+        }
+    ],
+    saved: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: "User"
+        }
+    ]
+    ,
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 })
 
