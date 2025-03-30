@@ -89,7 +89,7 @@ const SingleBlog = ({ data }: any) => {
           </h1>
         </div>
         <div className="flex">
-          <div className="flex flex-col md:gap-4 align-start justify-between">
+          <div className="flex flex-col md:gap-4 gap-4 align-start justify-between">
             <h2 className="text-left text-2xl font-extrabold break-words">
               {addElipsis(data.title, 70)}
             </h2>
@@ -104,7 +104,7 @@ const SingleBlog = ({ data }: any) => {
               </div> : ''
             } */}
             <div className="flex md:items-center flex-wrap justify-between mt-4 sm:m-0">
-              <div className="flex flex-wrap align-cennter gap-8">
+              <div className="flex flex-wrap align-center gap-8">
                 <div className="like flex align-center gap-2" onClick={handleLike}>
                   <span>
                     <svg
@@ -122,8 +122,9 @@ const SingleBlog = ({ data }: any) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">
-                   {like}  Like
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <span className="text-center">{like}</span>
+                    <span className="hidden md:block"> Like </span>
                   </span>
                 </div>
                 <div className="share flex align-center gap-2" onClick={handleShare}>
@@ -185,8 +186,9 @@ const SingleBlog = ({ data }: any) => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">
-                    {save} Save
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <span className="text-center">{save}</span>
+                    <span className="hidden md:block"> Save </span>
                   </span>
                 </div>
               </div>

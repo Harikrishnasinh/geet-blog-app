@@ -135,26 +135,26 @@ const SingleBlogPost = () => {
         </div>
       ) : (
         <>
-          <h1 className="text-left font-light text-[3rem] mb-4">
+          <h1 className="text-left font-light text-[2rem] break-words md:text-[3rem] mb-4">
             {blog.title}
           </h1>
           <Separator className="my-4" />
-          <div className="flex items-center justify-between">
+          <div className="flex items-center flex-wrap justify-between">
             <div className="flex flex-col items-start">
               <p>Author.</p>
-              <p className="text-left text-xl my-2">
+              <p className="text-left my-2">
                 {blog.userMetaData.userName}
               </p>
             </div>
-            <div className="flex flex-col items-start">
-              <p className="md:text-right w-100 text-left">Created at.</p>
-              <p className="w-100 md:text-right text-left text-xl my-2">
+            <div className="flex flex-col flex-wrap items-start">
+              <p className="md:text-right text-left">Created at.</p>
+              <p className="md:text-right text-left my-2">
                 {new Date(blog.createdAt).toLocaleString()}
               </p>
             </div>
           </div>
           <img src={blog.image} alt="" />
-          <p className="text-left tracking-wide mt-4 font-light text-xl leading-10">
+          <p className="text-left tracking-wide mt-4 font-light text-md leading-8">
             {blog.content}
           </p>
           <div className="flex flex-wrap align-cennter gap-8 mt-4">
@@ -175,8 +175,9 @@ const SingleBlogPost = () => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">
-                   {like}  Like
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <span className="text-center">{like}</span>
+                    <span className="hidden md:block"> Like </span>
                   </span>
                 </div>
                 <div className="share flex align-center gap-2" onClick={handleShare}>
@@ -238,8 +239,9 @@ const SingleBlogPost = () => {
                       />
                     </svg>
                   </span>
-                  <span className="text-muted-foreground hidden md:block">
-                    {save} Save
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    <span>{save}</span>
+                    <span className="hidden md:block">Save</span>
                   </span>
                 </div>
               </div>
