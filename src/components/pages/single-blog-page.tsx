@@ -117,7 +117,7 @@ const SingleBlogPost = () => {
         <div>
           <Skeleton className="w-full h-[3rem]"></Skeleton>
           <Separator className="my-4" />
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-4 md:gap-0  items-center justify-between">
             <div className="flex flex-col items-start">
               <Skeleton className="h-[3rem] w-100" />
               {/* <p>Author.</p> */}
