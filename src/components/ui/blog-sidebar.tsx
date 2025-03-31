@@ -43,7 +43,7 @@ const BlogSideBar = () => {
       const res = await axiosGet("/api/v1/post/top-users");
       if (res.success) {
         setTopUsers(res.data);
-        // setTopUsersLoading(false);
+        setTopUsersLoading(false);
       } else {
         console.log("Failed to fetch top users");
         toast.error("Failed to fetch top users", {
