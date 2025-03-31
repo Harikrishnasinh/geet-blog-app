@@ -89,7 +89,7 @@ const SingleBlog = ({ data }: any) => {
           </h1>
         </div>
         <div className="flex">
-          <div className="flex flex-col md:gap-4 gap-4 align-start justify-between">
+          <div className="flex flex-col md:gap-4 w-auto md:w-5/6 gap-4 align-start justify-between">
             <h2 className="text-left text-2xl font-extrabold break-words">
               {addElipsis(data.title, 70)}
             </h2>

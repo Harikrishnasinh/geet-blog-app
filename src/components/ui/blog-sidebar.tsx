@@ -5,10 +5,13 @@ import { Link } from "react-router";
 import { toast } from "sonner";
 import { Button } from "./button";
 import { Separator } from "./separator";
+import { Skeleton } from "./skeleton";
 
 const BlogSideBar = () => {
   const [blogs, setBlogs]: any = React.useState([]);
   const [topUsers, setTopUsers] = React.useState([]);
+  const [suggestedLoading, setSuggestedLoading] = React.useState(false);
+  const [topUsersLoading, setTopUsersLoading] = React.useState(false);
   useEffect(() => {
     const fetchData = async () => {
       await getSuggestedPost();
@@ -19,9 +22,11 @@ const BlogSideBar = () => {
 
   const getSuggestedPost = async () => {
     try {
+      setSuggestedLoading(true);
       const res = await axiosGet(`/api/v1/post/suggestedPost`);
       if (res.success) {
         setBlogs(res.data);
+        setSuggestedLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -34,9 +39,11 @@ const BlogSideBar = () => {
 
   const getTopUsers = async () => {
     try {
+      setTopUsersLoading(true);
       const res = await axiosGet("/api/v1/post/top-users");
       if (res.success) {
         setTopUsers(res.data);
+        // setTopUsersLoading(false);
       } else {
         console.log("Failed to fetch top users");
         toast.error("Failed to fetch top users", {
@@ -56,6 +63,37 @@ const BlogSideBar = () => {
     <div className="px-4 relative">
       <div className="md:w-11/12 flex flex-col gap-4 sticky top-[5rem]">
         <h1 className="text-left font-bold">Suggested For you</h1>
+        {suggestedLoading ? (<>
+          <>
+            <div className="flex gap-4">
+              <Skeleton className="size-8 rounded-full" />
+              <Skeleton className="h-auto w-5/6" />
+            </div>
+            <Skeleton className="h-[3vh] w-auto" />
+            <Skeleton className="h-[6vh] w-auto" />
+          </>
+          <>
+            <div className="flex gap-4">
+              <Skeleton className="size-8 rounded-full" />
+              <Skeleton className="h-auto w-5/6" />
+            </div>
+            <Skeleton className="h-[3vh] w-auto" />
+            <Skeleton className="h-[6vh] w-auto" />
+          </>
+          <>
+            <div className="flex gap-4">
+              <Skeleton className="size-8 rounded-full" />
+              <Skeleton className="h-auto w-5/6" />
+            </div>
+            <Skeleton className="h-[3vh] w-auto" />
+            <Skeleton className="h-[6vh] w-auto" />
+          </>
+          </>
+        ) : (
+          blogs.length === 0 && (
+            <p className="text-center text-sm">No suggested posts available</p>
+          )
+        )}
 
         {blogs?.map((blog: any, index: any) => {
           return (
@@ -92,6 +130,27 @@ const BlogSideBar = () => {
         <Separator />
 
         <h1 className="text-left font-bold">Top Blogiums</h1>
+
+        {topUsersLoading ? (<>
+          <>
+            <Skeleton className="h-[3vh] w-3/4" />
+            <Skeleton className="h-[3vh] w-auto" />
+          </>
+          <>
+            <Skeleton className="h-[3vh] w-3/4" />
+            <Skeleton className="h-[3vh] w-auto" />
+          </>
+          <>
+            <Skeleton className="h-[3vh] w-3/4" />
+            <Skeleton className="h-[3vh] w-auto" />
+          </>
+          </>
+        ) : (
+          topUsers.length === 0 && (
+            <p className="text-center text-sm">No users found</p>
+          )
+        )}
+
         {topUsers.length && (
           <div>
             {topUsers.map((topUser: any) => {
@@ -109,16 +168,16 @@ const BlogSideBar = () => {
                     </p>
                   </div>
                   <div>
-                  <Link to={`/profile/${topUser.userId}`}>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="w-full"
-                      size={"sm"}
-                    >
-                      View Profile
-                    </Button>
-                  </Link>
+                    <Link to={`/profile/${topUser.userId}`}>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        className="w-full"
+                        size={"sm"}
+                      >
+                        View Profile
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               );
