@@ -157,7 +157,7 @@ const BlogSideBar = () => {
               return (
                 <div
                   key={topUser._id}
-                  className="flex my-2 gap-4 flex-col items-start"
+                  className="flex my-4 gap-4 flex-col items-start"
                 >
                   <div className="flex flex-col gap-2 align-start justify-between">
                     <h2 className="text-left text-md font-bold">

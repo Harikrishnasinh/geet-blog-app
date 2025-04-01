@@ -1,75 +1,99 @@
 import { addElipsis } from "@/lib/utils";
 import { Button } from "./button";
 import { Link } from "react-router";
-import { axiosPost } from "@/handleApi";
+import { axiosDelete, axiosPost } from "@/handleApi";
 import React from "react";
 import { toast } from "sonner";
 
-const SingleBlog = ({ data }: any) => {
-  const [like, setLike] = React.useState(0)
-  const [save, setSave] = React.useState(0)
+const SingleBlog = ({ data, from }: any) => {
+  const [like, setLike] = React.useState(0);
+  const [save, setSave] = React.useState(0);
 
-  
+  console.log(from);
+
   const userDataString = localStorage.getItem("user"); // Get item from localStorage
-  const userData = userDataString ? JSON.parse(userDataString) : null; // Safely parse JSON
+  const userData: any = userDataString ? JSON.parse(userDataString) : null; // Safely parse JSON
 
   const handleLike = async () => {
     try {
       const oPayload = {
         iPostId: data._id,
         iUserId: userData._id,
-      }    
-      const res = await axiosPost('/api/v1/post/like', oPayload)
-      if(res.success){
+      };
+      const res = await axiosPost("/api/v1/post/like", oPayload);
+      if (res.success) {
         setLike(res.data.likesCount);
-        toast.success('Liked list updated!',{
+        toast.success("Liked list updated!", {
           closeButton: true,
-          position: "top-right"
-        })
+          position: "top-right",
+        });
       }
     } catch (error) {
-      toast.success('Something went wrong',{
+      toast.success("Something went wrong", {
         closeButton: true,
-        position: "top-right"
-      })
+        position: "top-right",
+      });
     }
-  }
+  };
 
   const handleSave = async () => {
     try {
       const oPayload = {
         iPostId: data._id,
         iUserId: userData._id,
-      }    
-      const res = await axiosPost('/api/v1/post/save', oPayload)
-      if(res.success){
+      };
+      const res = await axiosPost("/api/v1/post/save", oPayload);
+      if (res.success) {
         setSave(res.data.savedCount);
-        toast.success('Saved successfully',{
+        toast.success("Saved successfully", {
           closeButton: true,
-          position: "top-right"
+          position: "top-right",
+        });
+      }
+    } catch (error) {
+      toast.success("Something went wrong", {
+        closeButton: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleShare = async () => {
+    import.meta.env.VITE_DB_URL;
+    navigator.clipboard.writeText(
+      `${import.meta.env.VITE_FRONTEND_URL}/${data._id}`
+    );
+    toast.success("Link copied to clipboard", {
+      closeButton: true,
+      position: "top-right",
+    });
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axiosDelete(`/api/v1/post/${data._id}`);
+      if (res.success) {
+        toast.success("Post deleted successfully", {
+          closeButton: true,
+          position: "top-right",
+        });
+        toast.success("Post deleted successfully", {
+          closeButton: true,
+          position: "top-right",
         })
       }
     } catch (error) {
-      toast.success('Something went wrong',{
+      toast.success("Something went wrong", {
         closeButton: true,
-        position: "top-right"
-      })
+        position: "top-right",
+      });
     }
   }
 
-  const handleShare = async () => {
-    import.meta.env.VITE_DB_URL
-    navigator.clipboard.writeText(`${import.meta.env.VITE_FRONTEND_URL}/${data._id}`)
-    toast.success('Link copied to clipboard',{
-      closeButton: true,
-      position: "top-right"
-    })
-  }
-
-  React.useEffect(() =>{
-    setLike(data.likes.length)
-    setSave(data.saved.length)
-  },[])
+  React.useEffect(() => {
+    setLike(data.likes.length);
+    setSave(data.saved.length);
+  }, []);
 
   return (
     <>
@@ -105,7 +129,10 @@ const SingleBlog = ({ data }: any) => {
             } */}
             <div className="flex md:items-center flex-wrap justify-between mt-4 sm:m-0">
               <div className="flex flex-wrap align-center gap-8">
-                <div className="like flex align-center gap-2" onClick={handleLike}>
+                <div
+                  className="like flex align-center gap-2"
+                  onClick={handleLike}
+                >
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +154,10 @@ const SingleBlog = ({ data }: any) => {
                     <span className="hidden md:block"> Like </span>
                   </span>
                 </div>
-                <div className="share flex align-center gap-2" onClick={handleShare}>
+                <div
+                  className="share flex align-center gap-2"
+                  onClick={handleShare}
+                >
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -169,7 +199,10 @@ const SingleBlog = ({ data }: any) => {
                     Comment
                   </span>
                 </div> */}
-                <div className="save flex align-center gap-2" onClick={handleSave} >
+                <div
+                  className="save flex align-center gap-2"
+                  onClick={handleSave}
+                >
                   <span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -192,18 +225,26 @@ const SingleBlog = ({ data }: any) => {
                   </span>
                 </div>
               </div>
-              <div>
-                <Button type="button" variant="default">
-                  <Link to={`/post/${data._id}`}>
-                    Read More
-                  </Link>
+              <div className="flex items-center gap-2">
+                <Button type="button" className="w-auto" variant="default">
+                  <Link to={`/post/${data._id}`}>Read More</Link>
                 </Button>
+                {from == "all" &&
+                userData._id.toString() == data.userMetaData._id.toString() ? (
+                  <Button onClick={handleDelete} variant={"destructive"}>Delete</Button>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
           <div className="hidden w-100 md:flex justify-end items-center">
             <img
-              src={data.image.length ? data.image : 'https://plus.unsplash.com/premium_photo-1676068243785-7b4d54e63c6d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTV8fHxlbnwwfHx8fHw%3D'}
+              src={
+                data.image.length
+                  ? data.image
+                  : "https://plus.unsplash.com/premium_photo-1676068243785-7b4d54e63c6d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTV8fHxlbnwwfHx8fHw%3D"
+              }
               alt="profile"
               className="h-40 w-40 shadow-xl object-cover"
             />

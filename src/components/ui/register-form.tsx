@@ -109,7 +109,7 @@ export function RegisterForm({
                   placeholder="jackdaniels"
                   required
                   name="userName"
-                  value={user.username}
+                  value={user.userName}
                   onChange={(e) => handleChange(e)}
                 />
               </div>

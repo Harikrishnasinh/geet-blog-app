@@ -68,7 +68,7 @@ const UserProfilePage = () => {
     }
   };
 
-  const fetchTabData = async (tab = "likes") => {
+  const fetchTabData = async (tab = "all") => {
     const oPayload = {
       tab: tab,
     };
@@ -86,6 +86,7 @@ const UserProfilePage = () => {
   };
 
   const aTabData = [
+    { label: "All", value: "all" },
     { label: "Liked", value: "likes" },
     { label: "Saved", value: "saved" },
     // Add more tabs as needed...
@@ -124,7 +125,7 @@ const UserProfilePage = () => {
         </div>
         <Separator className="my-4" />
         {!disabled ? (
-          <Tabs defaultValue="likes" className="w-full">
+          <Tabs defaultValue="all" className="w-full">
             <TabsList>
               {aTabData.map((tab, index) => (
                 <TabsTrigger
@@ -142,7 +143,7 @@ const UserProfilePage = () => {
                   {blogTab.length ? (
                     <div>
                       {blogTab.map((blog: any, index: any) => {
-                        return <SingleBlog key={index} data={blog} />;
+                        return <SingleBlog key={index} data={blog} from={tab.value} />;
                       })}
                     </div>
                   ) : (
@@ -157,7 +158,7 @@ const UserProfilePage = () => {
             {blogTab.length ? (
               <div>
                 {blogTab.map((blog: any, index: any) => {
-                  return <SingleBlog key={index} data={blog} />;
+                  return <SingleBlog key={index} data={blog} from={'profilePage'} />;
                 })}
               </div>
             ) : (

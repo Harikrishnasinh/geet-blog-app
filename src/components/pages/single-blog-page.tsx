@@ -153,7 +153,9 @@ const SingleBlogPost = () => {
               </p>
             </div>
           </div>
+          <center>
           <img src={blog.image} alt="" />
+          </center>
           <p className="text-left tracking-wide mt-4 font-light text-md leading-8">
             {blog.content}
           </p>
