@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPost, fetchTabBlogs, getAllPosts, getPostWithCategoryId, getPostWithId, getTopUsers, handleLike, handleSave, handleSearch, suggestedPost, userPost } from "../controllers/post.controller.js";
+import { createPost, deletePost, fetchTabBlogs, getAllPosts, getPostWithCategoryId, getPostWithId, getTopUsers, handleLike, handleSave, handleSearch, suggestedPost, userPost } from "../controllers/post.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const postRouter = new Router();
@@ -16,5 +16,6 @@ postRouter
     .post('/save', handleSave)
     .post('/tab/:iUserId', fetchTabBlogs)
     .get('/user/:iUserId', userPost)
+    .delete('/:id', deletePost)
 
 export default postRouter

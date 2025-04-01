@@ -87,7 +87,7 @@ export const getPostWithId = asyncHandler(async (req, res, next) => {
     }
 })
 
-export const handleLike = asyncHandler(async (req, res, next) =>{
+export const handleLike = asyncHandler(async (req, res, next) => {
     try {
         const { iPostId, iUserId } = req.body;
         const post = await Post.findById(iPostId);
@@ -128,7 +128,7 @@ export const handleLike = asyncHandler(async (req, res, next) =>{
             );
         }
 
-        
+
     } catch (error) {
         console.log(error);
         return res.status(500).json(
@@ -140,7 +140,7 @@ export const handleLike = asyncHandler(async (req, res, next) =>{
     }
 })
 
-export const handleSave = asyncHandler(async (req, res, next) =>{
+export const handleSave = asyncHandler(async (req, res, next) => {
     try {
         const { iPostId, iUserId } = req.body;
         const post = await Post.findById(iPostId);
@@ -181,7 +181,7 @@ export const handleSave = asyncHandler(async (req, res, next) =>{
             );
         }
 
-        
+
     } catch (error) {
         console.log(error);
         return res.status(500).json(
@@ -193,23 +193,26 @@ export const handleSave = asyncHandler(async (req, res, next) =>{
     }
 })
 
-export const fetchTabBlogs = asyncHandler(async (req, res, next) =>{
+export const fetchTabBlogs = asyncHandler(async (req, res, next) => {
     try {
         const { iUserId } = req.params
         const { tab } = req.body
 
         const userId = new mongoose.Types.ObjectId(iUserId)
+        let blogs = []
 
-        const query = {
-            [tab]: { $in: [userId] }
-        }
-        console.log(query)
-        const blogs = await Post.aggregate([
-            {
+        if (tab == 'all') {
+            blogs = await Post.find({"userMetaData._id": iUserId})
+        } else {
+            const query = {
+                [tab]: { $in: [userId] }
+            }
+            const mainQuery = {
                 $match: query
             }
-        ]);
-    
+            blogs = await Post.aggregate([mainQuery]);
+        }
+
         return res.status(200).json(
             new apiResponse(
                 200,
@@ -281,7 +284,7 @@ export const handleSearch = asyncHandler(async (req, res, next) => {
 export const suggestedPost = asyncHandler(async (req, res, next) => {
     try {
         const posts = await Post.find().sort({
-            likes : -1
+            likes: -1
         }).limit(3)
         return res.status(200).json(
             new apiResponse(
@@ -335,7 +338,7 @@ export const getTopUsers = asyncHandler(async (req, res) => {
                 }
             }
         ]);
-        
+
 
         return res.status(200).json(
             new apiResponse(
@@ -353,4 +356,28 @@ export const getTopUsers = asyncHandler(async (req, res) => {
             )
         );
     }
+});
+
+export const deletePost = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) {
+        res.status(404);
+        return res.status(500).json(
+            new apiError(
+                500,
+                "Post not found!!"
+            )
+        );
+    }
+    await post.deleteOne();
+
+    res.status(200).json(
+        new apiResponse(
+            200,
+            "Post deleted successfully",
+        )
+    );
+
 });
