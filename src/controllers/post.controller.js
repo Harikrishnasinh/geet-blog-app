@@ -283,9 +283,12 @@ export const handleSearch = asyncHandler(async (req, res, next) => {
 
 export const suggestedPost = asyncHandler(async (req, res, next) => {
     try {
-        const posts = await Post.find().sort({
-            likes: -1
-        }).limit(3)
+        const posts = await Post.aggregate([
+            { $addFields: { likesCount: { $size: "$likes" } } }, // Add likes count field
+            { $sort: { likesCount: -1 } }, // Sort by likes count
+            { $limit: 3 } // Limit results to top 3
+        ]);
+        
         return res.status(200).json(
             new apiResponse(
                 200,
