@@ -7,6 +7,9 @@ import Home from "./components/pages/home-page";
 import SingleBlogPost from "./components/pages/single-blog-page";
 import MainLayout from "./components/pages/main-layout";
 import UserProfilePage from "./components/pages/user-profile-page";
+import MainAdminLayout from "./components/pages/main-admin-layout";
+import AdminHome from "./components/pages/admin-home";
+import AdminLogin from "./components/pages/admin-login";
 
 function App() {
   return (
@@ -17,6 +20,11 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/post/:id" element={<SingleBlogPost />} />
             <Route path="/profile/:iUserId" element={<UserProfilePage />} />
+          </Route>
+
+          <Route path="/admin" element={<MainAdminLayout />}>
+            <Route index element={<AdminLogin />} />
+            <Route path="/admin/home" element={<AdminHome />} />
           </Route>
 
           <Route path="/mode-toggle" element={<ModeToggle />} />
