@@ -24,7 +24,7 @@ function App() {
 
           <Route path="/admin" element={<MainAdminLayout />}>
             <Route index element={<AdminLogin />} />
-            <Route path="/admin/home" element={<AdminHome />} />
+            <Route path="/admin/dashboard" element={<AdminHome />} />
           </Route>
 
           <Route path="/mode-toggle" element={<ModeToggle />} />
