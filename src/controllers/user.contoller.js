@@ -136,4 +136,4 @@ export const updateUser = asyncHandler(async (req, res, next) => {
 })
 
 
-export { register, login, logout, fetchUser }
+export { fetchUser, login, logout, register };
